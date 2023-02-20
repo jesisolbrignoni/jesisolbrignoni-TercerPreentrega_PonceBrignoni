@@ -3,8 +3,38 @@
 {% block contenidoQueCambia %}
 
 
-    <h1> Formulario de Búsqueda </h1>
-    <p> Médicos, Estudios y Pacientes </p> 
+    <h1> App Codermed </h1>
+    <p> En esta app podrás agregar a nuestra base de datos: Médicos, Pacientes y Estudios </p> 
+
+    <form action="/AppJesi/buscar/" method="GET">
+    
+        <input type="text" name="nombre" id="nombre">
+        <input type="submit" value="Buscar">
+        
+    </form>
+
+
+
+{% if medicos %}
+
+    <p>Estamos buscando al médico: {{nombre}}</p>
+
+    <ul>
+    {% for medico in medicos %}
+    <li> {{medico.nombre}}</li>
+    <li> {{medico.apellido}}</li>
+    <li> {{medico.matricula}}</li>
+    <li> {{medico.especialidad}}</li>
+    {% endfor %}
+
+
+    </ul>
+    {% else %}
+    <p>No hay datos con esa descripción.</p>
+
+{% endif %}
+
+<p style="color: red;">{{respuesta}}</p>
 
         {% endblock %}
 

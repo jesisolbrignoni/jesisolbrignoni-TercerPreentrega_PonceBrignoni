@@ -1,38 +1,45 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from AppJesi.models import *
-from AppJesi.forms import MedicoFormulario
-
-#def estudio(self):
-#    estudio = Estudios(nombre='Análisis de Laboratorio', costo="4000")
-#   estudio.save()
-#   documento_de_texto = f"- Estudio: {estudio.nombre} - Costo: {estudio.costo}"
-#   return HttpResponse(documento_de_texto)
+from AppJesi.forms import MedicoFormulario, EstudiosFormulario, PacienteFormulario
 
 def inicio(request):
     return render(request, 'AppJesi/inicio.html')
-    #return HttpResponse('vista inicio')
 
-def medicos(request): 
-    return render(request, 'AppJesi/medicos.html')
-    #return HttpResponse('vista medicos')
 
 def pacientes(request):
-    return render(request, 'AppJesi/pacientes.html')
-    #return HttpResponse('vista pacientes')
+    if request.method == 'POST':
+        miFormulario = PacienteFormulario(request.POST)
+        print(miFormulario)
+        
+        if miFormulario.is_valid:
+            informacion = miFormulario.cleaned_data
+            paciente = Paciente(nombre=informacion['nombre'], apellido=informacion['apellido'], email=informacion['email'], cobertura=informacion['cobertura'])
+            paciente.save()
+            return render(request, "AppJesi/inicio.html")
+    else:
+        miFormulario = PacienteFormulario()
+            
+    return render(request, "AppJesi/pacienteFormulario.html", {"miFormulario":miFormulario})
 
-def estudios(request): 
-    return render(request, 'AppJesi/estudios.html')
-    #return HttpResponse('vista estudios')
-    
-#def medicoFormulario(request):
-#   if request.method == 'POST':
-#        medico = Medico(request.POST['nombre'], request.POST['apellido'], request.POST['matricula'], request.POST['especialidad'])
-#       medico.save()
-#       return render(request, "AppJesi/inicio.html")
-#   return render(request, "AppJesi/medicoFormulario.html")
 
-def medicoFormulario(request):
+def estudios(request):
+    if request.method == 'POST':
+        miFormulario = EstudiosFormulario(request.POST)
+        print(miFormulario)
+        
+        if miFormulario.is_valid:
+            informacion = miFormulario.cleaned_data
+            estudio = Estudios(nombre=informacion['nombre'], costo=informacion['costo'])
+            estudio.save()
+            return render(request, "AppJesi/inicio.html")
+    else:
+        miFormulario = EstudiosFormulario()
+            
+    return render(request, "AppJesi/estudiosFormulario.html", {"miFormulario":miFormulario})
+
+
+def medicos(request):
     if request.method == 'POST':
         miFormulario = MedicoFormulario(request.POST)
         print(miFormulario)
@@ -44,6 +51,21 @@ def medicoFormulario(request):
             return render(request, "AppJesi/inicio.html")
     else:
         miFormulario = MedicoFormulario()
-            
+                    
     return render(request, "AppJesi/medicoFormulario.html", {"miFormulario":miFormulario})
 
+#def busqueda_medico(request):
+#    return render(request, "AppJesi/busqueda_medico.html")
+
+def buscar(request):
+    if request.GET["nombre"]:
+        nombre = request.GET['nombre']
+        medicos = Medico.objects.filter(nombre__icontains=nombre)
+    
+        return render(request, "AppJesi/inicio.html", {"medicos":medicos, "nombre":nombre})
+    
+    else:
+        respuesta = "No enviaste datos" 
+
+    return HttpResponse(respuesta)
+    

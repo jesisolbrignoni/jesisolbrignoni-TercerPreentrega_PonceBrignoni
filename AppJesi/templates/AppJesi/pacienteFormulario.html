@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Agregar un Médico </title>
+    <title> Agregar un Paciente </title>
 </head>
 <body>
 {% extends "AppJesi/padre.html" %}
 {% load static %}
 {% block contenidoQueCambia %}
 
-    <h1> Formulario para agregar un Médico </h1>
-       
+    <h1> Formulario para agregar un Paciente </h1>
+        <!-- Aqui va lo que cambia y lo asociado a esta vista -->
     {% if miFormulario.errors %}
 
     <p style="color: red;"> Datos inválidos. </p>
@@ -21,6 +21,7 @@
 
     <form action="" method="POST">{% csrf_token %}
 
+        <!-- Aca esta la magia de Django -->
 
         <table>
 
